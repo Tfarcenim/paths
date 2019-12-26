@@ -1,0 +1,16 @@
+[
+{
+  "modid": "paths",
+  "name": "Paths",
+  "description": "paths",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Tfarecnim"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
