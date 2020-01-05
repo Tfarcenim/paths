@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class ConfigHandle {
 
@@ -63,7 +64,8 @@ public class ConfigHandle {
     configs.forEach((Double aDouble, List<NestedConfigEntry> nestedConfigEntries) -> {
       nestedConfigEntries.forEach(nestedConfigEntry -> {
         Arrays.stream(nestedConfigEntry.meta).forEach( meta -> {
-          modifierMap.put(Pair.of(nestedConfigEntry.block, meta), aDouble);
+          if (meta == -1) IntStream.range(0,16).forEach(i -> modifierMap.put(Pair.of(nestedConfigEntry.block, i), aDouble));
+          else modifierMap.put(Pair.of(nestedConfigEntry.block, meta), aDouble);
         });
       });
 
