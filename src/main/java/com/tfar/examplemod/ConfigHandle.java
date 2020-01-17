@@ -9,6 +9,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.*;
 import java.util.*;
@@ -46,33 +47,46 @@ public class ConfigHandle {
           try {
             String s = jsonElement.getKey();
             Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(s));
-            if (block == null || block == Blocks.AIR)
-              System.out.println(s + " is not a valid block!");
-            else blocks.add(new NestedConfigEntry(block,new int[1]));
+            if (block == null || block == Blocks.AIR) {
+              System.out.println(s + " may not exist or is not a valid block!");
+            }
+            else {
+              JsonArray jsonArray = jsonElement.getValue().getAsJsonArray();
+              List<Integer> list = new ArrayList<>();
+              jsonArray.forEach(jsonElement1 -> list.add(jsonElement1.getAsInt()));
+              blocks.add(new NestedConfigEntry(block,list.toArray(new Integer[0])));
+            }
           } catch (Exception e) {
             System.out.println(e + jsonElement.toString());
           }
 
         });
-        configs.put(Double.parseDouble(stringJsonElementEntry.getKey()), blocks);
+        String[] strings = stringJsonElementEntry.getKey().split(",");
+        double multi = Double.parseDouble(strings[0]);
+        int distance = Integer.parseInt(strings[1]);
+        boolean lineofsight = Boolean.parseBoolean(strings[2]);
+        configs.put(Triple.of(multi,distance,lineofsight), blocks);
       });
 
-    } catch (IOException ofcourse) {
-      throw new RuntimeException(ofcourse);
+    } catch (Exception ofcourse) {
+      ofcourse.printStackTrace();
     }
     modifierMap.clear();
-    configs.forEach((Double aDouble, List<NestedConfigEntry> nestedConfigEntries) -> {
+    configs.forEach((Triple<Double,Integer,Boolean> tripleDoubleIntBoolean, List<NestedConfigEntry> nestedConfigEntries) -> {
       nestedConfigEntries.forEach(nestedConfigEntry -> {
-        Arrays.stream(nestedConfigEntry.meta).forEach( meta -> {
-          if (meta == -1) IntStream.range(0,16).forEach(i -> modifierMap.put(Pair.of(nestedConfigEntry.block, i), aDouble));
-          else modifierMap.put(Pair.of(nestedConfigEntry.block, meta), aDouble);
-        });
+        if (nestedConfigEntry.meta != null && nestedConfigEntry.meta.length > 0) {
+          Arrays.stream(nestedConfigEntry.meta).forEach( meta -> {
+            modifierMap.put(Pair.of(nestedConfigEntry.block, meta), tripleDoubleIntBoolean);
+          });
+        } else {
+          IntStream.range(0,16).forEach(i -> modifierMap.put(Pair.of(nestedConfigEntry.block, i), tripleDoubleIntBoolean));
+        }
       });
-
     });
   }
 
-  public static final Map<Pair<Block,Integer>, Double> modifierMap = new HashMap<>();
-  private static final Map<Double, List<NestedConfigEntry>> configs = new HashMap<>();
+  public static final Map<Pair<Block,Integer>, Triple<Double,Integer,Boolean>> modifierMap = new HashMap<>();
+
+  private static final Map<Triple<Double,Integer,Boolean>, List<NestedConfigEntry>> configs = new HashMap<>();
 
 }
