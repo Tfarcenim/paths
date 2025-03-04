@@ -1,4 +1,4 @@
-package com.tfar.examplemod;
+package com.tfar.paths;
 
 public class ExampleConfig {
   static String s = "{\n" +

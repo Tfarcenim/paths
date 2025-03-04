@@ -1,4 +1,4 @@
-package com.tfar.examplemod;
+package com.tfar.paths;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

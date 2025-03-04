@@ -1,4 +1,4 @@
-package com.tfar.examplemod;
+package com.tfar.paths;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -22,22 +22,19 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import tfar.paths.paths.Tags;
 
-import static com.tfar.examplemod.ConfigHandle.modifierMap;
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(modid = Paths.MODID, name = "Paths", version = "1.0")
-public class Paths
-{
+@Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION)
+public class Paths {
   // Directly reference a log4j logger.
 
   private static final UUID MODIFIER_UUID = UUID.fromString("dd683d7b-6362-4fb8-8adf-f6059fcd7f2b");
   private static final MutableAttributeModifier MODIFIER =
           (MutableAttributeModifier) new MutableAttributeModifier(MODIFIER_UUID, "path multiplier",
                   1,1).setSaved(false);
-
-  public static final String MODID = "paths";
 
   private static final Logger LOGGER = LogManager.getLogger();
 

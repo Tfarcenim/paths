@@ -1,4 +1,4 @@
-package com.tfar.examplemod;
+package com.tfar.paths;
 
 import net.minecraft.block.Block;
 
