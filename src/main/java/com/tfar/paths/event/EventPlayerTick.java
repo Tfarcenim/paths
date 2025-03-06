@@ -17,7 +17,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import tfar.paths.paths.Tags;
 
 @Mod.EventBusSubscriber(modid = Tags.MOD_ID)
-public class PlayerTickEvent {
+public class EventPlayerTick {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         EntityPlayer player = event.player;
