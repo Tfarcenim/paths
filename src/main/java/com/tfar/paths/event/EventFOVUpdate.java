@@ -2,6 +2,10 @@ package com.tfar.paths.event;
 
 import com.tfar.paths.Paths;
 import com.tfar.paths.config.ConfigHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -15,7 +19,8 @@ public class EventFOVUpdate {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onFOVUpdate(FOVUpdateEvent event) {
-        if (Paths.MODIFIER.getAmount() != 0 && !ConfigHandler.modifyFOV) {
+        AttributeModifier modifier = Minecraft.getMinecraft().player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(Paths.MODIFIER_UUID);
+        if (modifier != null && !ConfigHandler.modifyFOV) {
             event.setNewfov(oldFov);
         } else {
             oldFov = event.getFov();

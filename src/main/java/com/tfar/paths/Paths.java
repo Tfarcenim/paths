@@ -1,6 +1,5 @@
 package com.tfar.paths;
 
-import com.tfar.paths.attribute.MutableAttributeModifier;
 import com.tfar.paths.config.BlockConfigHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -14,7 +13,6 @@ import java.util.UUID;
 public class Paths {
     public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_NAME);
     public static final UUID MODIFIER_UUID = UUID.fromString("dd683d7b-6362-4fb8-8adf-f6059fcd7f2b");
-    public static final MutableAttributeModifier MODIFIER = (MutableAttributeModifier) new MutableAttributeModifier(MODIFIER_UUID, "Path Multiplier", 1, 1).setSaved(false);
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {

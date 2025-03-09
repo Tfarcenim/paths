@@ -11,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.*;
 import java.util.*;
@@ -19,9 +18,9 @@ import java.util.stream.IntStream;
 
 public class BlockConfigHandler {
     public static final String LOCATION = "config/paths.json";
-    public static final Map<Pair<Block, Integer>, Triple<Double, Integer, Boolean>> MODIFIER_MAP = new HashMap<>();
+    public static final Map<Pair<Block, Integer>, PathValue> MODIFIER_MAP = new HashMap<>();
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-    public static final Map<Triple<Double, Integer, Boolean>, List<BlockConfigNestedEntry>> CONFIGS = new HashMap<>();
+    public static final Map<PathValue, List<BlockConfigNestedEntry>> CONFIGS = new HashMap<>();
 
     public static void handle() {
         File file = new File(LOCATION);
@@ -72,17 +71,17 @@ public class BlockConfigHandler {
                 double multi = Double.parseDouble(strings[0]);
                 int distance = Integer.parseInt(strings[1]);
                 boolean lineOfSight = Boolean.parseBoolean(strings[2]);
-                CONFIGS.put(Triple.of(multi, distance, lineOfSight), blocks);
+                CONFIGS.put(new PathValue(multi, distance, lineOfSight), blocks);
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
         MODIFIER_MAP.clear();
-        CONFIGS.forEach((Triple<Double, Integer, Boolean> tripleDoubleIntBoolean, List<BlockConfigNestedEntry> nestedConfigEntries) -> nestedConfigEntries.forEach(nestedConfigEntry -> {
+        CONFIGS.forEach((pathValue, nestedConfigEntries) -> nestedConfigEntries.forEach(nestedConfigEntry -> {
             if (nestedConfigEntry.meta != null && nestedConfigEntry.meta.length > 0) {
-                Arrays.stream(nestedConfigEntry.meta).forEach(meta -> MODIFIER_MAP.put(Pair.of(nestedConfigEntry.block, meta), tripleDoubleIntBoolean));
+                Arrays.stream(nestedConfigEntry.meta).forEach(meta -> MODIFIER_MAP.put(Pair.of(nestedConfigEntry.block, meta), pathValue));
             } else {
-                IntStream.range(0, 16).forEach(i -> MODIFIER_MAP.put(Pair.of(nestedConfigEntry.block, i), tripleDoubleIntBoolean));
+                IntStream.range(0, 16).forEach(i -> MODIFIER_MAP.put(Pair.of(nestedConfigEntry.block, i), pathValue));
             }
         }));
     }
