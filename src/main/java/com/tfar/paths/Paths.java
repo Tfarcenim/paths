@@ -1,6 +1,8 @@
 package com.tfar.paths;
 
 import com.tfar.paths.config.BlockConfigHandler;
+import crafttweaker.CraftTweakerAPI;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import org.apache.logging.log4j.LogManager;
@@ -8,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import tfar.paths.paths.Tags;
 
 import java.util.UUID;
+
+import static com.tfar.paths.compat.crafttweaker.CTPaths.INIT_ADD;
 
 @Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION)
 public class Paths {
@@ -17,5 +21,14 @@ public class Paths {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         BlockConfigHandler.handle();
+
+        if (Loader.isModLoaded("crafttweaker")) {
+            try {
+                INIT_ADD.forEach(CraftTweakerAPI::apply);
+            } catch (Exception e) {
+                e.printStackTrace();
+                CraftTweakerAPI.logError("Error while applying actions", e);
+            }
+        }
     }
 }
